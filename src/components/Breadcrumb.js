@@ -11,8 +11,8 @@ export default function Breadcrumb({ parentElem, initialState }) {
 
   this.render = () => {
     this.currentElem.innerHTML = `<div>root</div>${
-      this.state.crumbList.length
-        ? this.state.crumbList.map((crumb, idx) => `<div>${crumb}</div>`)
+      this.state.length
+        ? this.state.map((crumb) => `<div>${crumb}</div>`).join("")
         : ""
     }`;
   };
