@@ -7,6 +7,32 @@ function App() {
     crumbList: [],
   };
 
+  const onClickNode = (e) => {
+    let clickedElem = e.target.closest(".Node");
+    if (clickedElem.dataset.nodeType === "DIRECTORY") {
+      try {
+        fetch(
+          `https://zl3m4qq0l9.execute-api.ap-northeast-2.amazonaws.com/dev/${clickedElem.dataset.nodeId}`
+        )
+          .then((res) => res.json())
+          .then((res) =>
+            this.setState({
+              nodeList: res,
+              crumbList: [
+                ...this.state.crumbList,
+                {
+                  name: clickedElem.dataset.nodeName,
+                  id: clickedElem.dataset.nodeId,
+                },
+              ],
+            })
+          );
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   const appElem = document.querySelector(".App");
 
   const breadcrumb = new Breadcrumb({
@@ -17,12 +43,14 @@ function App() {
   const nodes = new Nodes({
     parentElem: appElem,
     initialState: this.state.nodeList,
+    onClick: (e) => onClickNode(e),
   });
 
   this.setState = (newState) => {
+    console.log(newState);
     this.state = newState;
-    console.log("state", this.state);
     nodes.setState(this.state.nodeList);
+    breadcrumb.setState(this.state.crumbList);
   };
 
   breadcrumb.render();

@@ -1,4 +1,4 @@
-export default function Nodes({ parentElem, initialState }) {
+export default function Nodes({ parentElem, initialState, onClick }) {
   this.state = initialState;
   this.currentElem = document.createElement("div");
   this.currentElem.className = "Nodes";
@@ -13,14 +13,19 @@ export default function Nodes({ parentElem, initialState }) {
   this.render = () => {
     this.state.length
       ? (this.currentElem.innerHTML = this.state
-          .map((node) =>
-            node.type === "DIRECTORY"
-              ? `<div class="Node"><img src="/assets/directory.png" />
+          .map((node) => {
+            console.log(node);
+            return node.type === "DIRECTORY"
+              ? `<div class="Node" data-node-type=${node.type} data-node-id=${node.id} data-node-name=${node.name}><img src="/assets/directory.png" />
             <div>${node.name}</div></div>`
-              : `<div class="Node"><img src="/assets/file.png" />
-            <div>${node.name}</div></div>`
-          )
+              : `<div class="Node" data-node-type=${node.type} data-node-id=${node.id} data-node-name=${node.name}><img src="/assets/file.png" />
+            <div>${node.name}</div></div>`;
+          })
           .join(""))
       : "";
   };
+
+  this.currentElem.addEventListener("click", (e) => {
+    onClick(e);
+  });
 }
